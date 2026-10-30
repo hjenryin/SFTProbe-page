@@ -1,0 +1,103 @@
+/* Content and layout adaptations to the Academic Project Page Template. */
+:root { --reading-width: 850px; --figure-width: 1010px; }
+html { scroll-padding-top: 24px; }
+body, button { font-family: "Inter", "Segoe UI", Helvetica, Arial, sans-serif; }
+strong { color: #24344c; }
+a { color: var(--primary-color); }
+a:hover { text-decoration: underline; }
+.hero, .section { animation: none; }
+.publication-header .hero-body { padding: 58px 24px 22px; }
+.publication-title { max-width: 1100px; margin: 0 auto 26px !important; font-size: clamp(2rem, 3.25vw, 2.9rem); line-height: 1.22 !important; letter-spacing: -0.035em; }
+.publication-authors { font-size: 1.15rem; line-height: 1.8; margin-bottom: 12px; }
+.publication-authors a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
+.publication-authors a:hover { color: var(--primary-hover); text-decoration: underline; text-underline-offset: 3px; }
+.author-block { margin: 0 5px; }
+.affiliations { color: #526075; font-size: 1rem; }
+sup { font-size: .68em; margin-left: 2px; }
+.publication-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.publication-links .button { min-width: 110px; height: 43px; margin: 0 !important; }
+.section { padding: 58px 24px; }
+.container.reading { max-width: var(--reading-width) !important; }
+.container.figure-width { max-width: var(--figure-width) !important; }
+.title.is-3 { font-size: 1.85rem; margin-bottom: 26px !important; padding-bottom: 0; letter-spacing: -.02em; }
+.subsection-title { font-size: 1.35rem; font-weight: 650; margin: 0 0 17px; line-height: 1.35; color: var(--text-primary); }
+.paper-text { font-size: 1.04rem; line-height: 1.85; color: #465165; }
+.paper-text p + p { margin-top: 18px; }
+
+.teaser { padding: 14px 24px 46px; }
+.paper-figure { margin: 0; }
+.paper-figure img { display: block; width: 100%; height: auto; margin: 0 auto; }
+.teaser .paper-figure img { max-width: 335px; }
+figcaption { max-width: var(--reading-width); margin: 20px auto 0; font-size: .95rem; line-height: 1.7; color: #526075; }
+.teaser figcaption { max-width: 740px; text-align: center; }
+.figure-number { font-weight: 650; color: #27364d; }
+.abstract-section { background: var(--background-secondary); border-block: 1px solid var(--border-color); }
+.abstract-section .paper-text { text-align: justify; hyphens: auto; }
+.method-block + .method-block { margin-top: 54px; }
+.theorem { margin: 26px 0; padding: 25px 28px; border-left: 3px solid #8299c2; background: #f7f9fc; font-size: .96rem; line-height: 1.75; color: #3c485c; }
+.theorem summary { display: block; list-style: none; cursor: pointer; }
+.theorem summary::-webkit-details-marker { display: none; }
+.theorem-label { display: block; font-weight: 700; color: #24344c; margin-bottom: 8px; }
+.theorem-idea { display: block; }
+.theorem-prompt { display: flex; align-items: center; gap: 10px; color: #2563eb; font-size: .88rem; margin-top: 12px; font-weight: 600; }
+.theorem-toggle::before { content: "+"; font-size: 1.2rem; line-height: 1; }
+.theorem[open] .theorem-toggle::before { content: "−"; }
+.theorem-statement { border-top: 1px solid #dce3ee; padding-top: 24px; margin-top: 24px; }
+.theorem:not([open]) > .theorem-statement { display: none; }
+.theorem h4 { font-size: 1.02rem; font-weight: 700; color: #24344c; margin-bottom: 12px; }
+.theorem p { margin: 12px 0; }
+
+.equation { overflow-x: auto; overflow-y: hidden; padding: 4px 0; max-width: 100%; }
+.equation mjx-container { min-width: max-content; }
+.equation.bound { font-size: .85em; }
+.interactive { max-width: var(--reading-width); margin: 28px auto 0; }
+.interactive.algorithm-search { margin-bottom: 40px; }
+.interactive iframe { width: 100%; height: 680px; display: block; background: white; border: 0; border-radius: 0; }
+.teacher-section { border-top: 1px solid var(--border-color); }
+.teacher-figure { margin-top: 28px; }
+.teacher-figure img { max-width: 850px; }
+.results-section { border-top: 1px solid var(--border-color); }
+.result-block + .result-block { margin-top: 48px; padding-top: 40px; border-top: 1px solid var(--border-color); }
+.result-block .subsection-title { max-width: var(--reading-width); margin: 0 auto 24px; }
+.medical-selection img { max-width: 850px; }
+.medical-curation img, .math-curation img { max-width: 610px; }
+.table-wrapper { overflow-x: auto; max-width: var(--reading-width); margin: auto; }
+.physics-table { width: 100%; max-width: 600px; margin-inline: auto; font-size: .98rem; border-collapse: collapse; }
+.physics-table caption { text-align: left; caption-side: top; color: #526075; font-size: .95rem; line-height: 1.7; padding-bottom: 18px; }
+.physics-table th, .physics-table td { padding: 12px 18px; vertical-align: middle; border: 0; }
+.physics-table thead { border-block: 2px solid #526075; }
+.physics-table th { font-weight: 650; }
+.physics-table th:last-child, .physics-table td:last-child { text-align: right; white-space: nowrap; }
+.physics-table tbody { border-bottom: 2px solid #526075; }
+.physics-table .ours-start { border-top: 1px solid #cbd5e1; }
+.physics-table .ours { background: #f4f7fc; }
+.physics-table .best { font-weight: 700; }
+.citation-section { background: var(--background-secondary); border-top: 1px solid var(--border-color); }
+.bibtex-header .title { margin: 0 !important; }
+.copy-bibtex-btn { padding: 9px 16px; }
+.copy-status { min-height: 24px; font-size: .85rem; color: #526075; margin-top: 7px; }
+pre { text-align: left; font-size: .83rem !important; box-shadow: none; }
+.footer { padding: 25px 24px; font-size: .85rem; text-align: center; }
+.footer p + p { margin-top: 7px; }
+:focus-visible { outline: 2px solid #2563eb; outline-offset: 4px; }
+.skip-link { position: absolute; left: 16px; top: -100px; background: white; padding: 12px; z-index: 10; }
+.skip-link:focus { top: 12px; }
+@media (max-width: 768px) {
+  .publication-header .hero-body { padding: 36px 18px 18px; }
+  .publication-title { font-size: 2rem !important; }
+  .publication-authors { font-size: 1rem !important; }
+  .affiliations { font-size: .9rem; }
+  .section { padding: 40px 18px; }
+  .teaser { padding: 12px 18px 34px; }
+  .teaser .paper-figure img { max-width: 280px; }
+  .title.is-3 { font-size: 1.6rem; }
+  .subsection-title { font-size: 1.18rem; }
+  .paper-text { font-size: 1rem; line-height: 1.8; }
+  .abstract-section .paper-text { text-align: left; }
+  .theorem { padding: 18px 16px; margin-inline: -4px; }
+  .physics-table { font-size: .86rem; }
+  .physics-table th, .physics-table td { padding: 10px 8px; }
+  .publication-links .button { width: auto; padding: .5rem .9rem !important; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+@media print {  .publication-links, .copy-bibtex-btn, .skip-link { display: none; } .section { padding-block: 24px; } .interactive iframe { height: 780px !important; } }

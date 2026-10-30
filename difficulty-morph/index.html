@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loss basin to difficulty separation</title>
+<link rel="stylesheet" href="../static/css/interactive.css">
+<link rel="stylesheet" href="../static/css/fonts.css">
+</head>
+<body class="difficulty-demo">
+<div class="wrap">
+  <h4 class="animation-title">Understanding loss landscape and problem difficulty</h4>
+  <div class="caption" id="caption" aria-live="polite"></div>
+  <div class="controls">
+    <button id="prev">&larr; Back</button>
+    <button id="next">Next &rarr;</button>
+    <button id="play">Play all</button>
+    <div class="dots" id="dots"></div>
+  </div>
+  <div class="hint">Drag to rotate, scroll to zoom. Arrow keys step through the animation.</div>
+  <div id="difficulty-key" class="difficulty-key" aria-label="Difficulty levels" hidden></div>
+  <div class="stage">
+    <div id="plot"></div>
+    <div id="plot2d"></div>
+    <div class="cbar" id="cbar">
+      <div class="bars"><div class="bar" id="cbar-loss"></div><div class="bar" id="cbar-corr"></div></div>
+      <div class="ticks" id="cbar-ticks"></div>
+      <div class="label" id="cbar-label"></div>
+    </div>
+    <div class="inflegend" id="inflegend"><svg width="34" height="10"><line id="inf-under" x1="1" y1="5" x2="33" y2="5" stroke="black" stroke-width="3.5"></line><line id="inf-dash" x1="1" y1="5" x2="33" y2="5" stroke="#ffcc00" stroke-width="1.5" stroke-dasharray="7.5 4.5"></line></svg>Inflection Point</div>
+  </div>
+</div>
+<script src="../static/js/interactive.js"></script>
+<script src="../static/js/plotly.min.js"></script>
+<script src="morph_data.js"></script>
+<script src="morph.js"></script>
+</body>
+</html>

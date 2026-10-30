@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From Weeks to Hours: Fast and Principled SFT Data Generation for Reasoning LLMs</title>
+  <meta name="description" content="SFTPROBE: fast and principled SFT data generation for reasoning LLMs through short-prefix loss evaluations, loss-basin probing, and teacher selection.">
+  <meta name="author" content="Hongyi Henry Jin, Wenhan Yang, Meysam Ghaffari, Carlos Morato, Baharan Mirzasoleiman">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="From Weeks to Hours: Fast and Principled SFT Data Generation for Reasoning LLMs">
+  <meta property="og:description" content="SFTPROBE predicts difficulty and diversity from short reasoning prefixes to curate high-quality reasoning data.">
+  <meta name="citation_title" content="From Weeks to Hours: Fast and Principled SFT Data Generation for Reasoning LLMs">
+  <meta name="citation_author" content="Jin, Hongyi Henry">
+  <meta name="citation_author" content="Yang, Wenhan">
+  <meta name="citation_author" content="Ghaffari, Meysam">
+  <meta name="citation_author" content="Morato, Carlos">
+  <meta name="citation_author" content="Mirzasoleiman, Baharan">
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/fonts.css">
+  <link rel="stylesheet" href="static/css/template.css">
+  <link rel="stylesheet" href="static/css/project.css">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' },
+      options: { enableMenu: false }
+    };
+  </script>
+  <script defer src="static/js/tex-svg.js"></script>
+  <script defer src="static/js/project.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#abstract">Skip to content</a>
+  <header class="hero publication-header" id="top">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title publication-title">From Weeks to Hours: Fast and Principled<br class="is-hidden-mobile"> SFT Data Generation for Reasoning LLMs</h1>
+        <div class="publication-authors">
+          <span class="author-block"><a href="https://hjenryin.github.io/homepage/" target="_blank" rel="noopener noreferrer">Hongyi Henry Jin</a><sup>1</sup></span>
+          <span class="author-block"><a href="https://sites.google.com/g.ucla.edu/wenhan-yang/home" target="_blank" rel="noopener noreferrer">Wenhan Yang</a><sup>1</sup></span>
+          <span class="author-block"><a href="https://www.linkedin.com/in/meysam-ghaffari-ph-d-a2553088/" target="_blank" rel="noopener noreferrer">Meysam Ghaffari</a><sup>2</sup></span>
+          <span class="author-block"><a href="https://www.linkedin.com/in/carlosmorato/" target="_blank" rel="noopener noreferrer">Carlos Morato</a><sup>2</sup></span>
+          <span class="author-block"><a href="https://baharanm.github.io/" target="_blank" rel="noopener noreferrer">Baharan Mirzasoleiman</a><sup>1</sup></span>
+        </div>
+        <div class="affiliations"><span class="author-block"><sup>1</sup>University of California, Los Angeles</span> <span class="author-block"><sup>2</sup>Optum AI</span></div>
+        <div class="publication-links">
+          <a class="button is-dark" href="static/pdfs/paper.pdf">Paper</a>
+          <a class="button is-dark" href="https://github.com/hjenryin/SFTProbe">Code</a>
+          <a class="button is-dark" href="https://huggingface.co/datasets/hjenryin/OlympicPhysics">Data</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="teaser" aria-label="Main result">
+    <div class="container reading">
+      <figure class="paper-figure">
+        <img src="static/images/figure-1-teaser.svg" width="149" height="159" fetchpriority="high"
+          alt="Figure 1. Math reasoning accuracy and curation compute for OpenThoughts with 89k examples and SFTPROBE with 5k and 7.5k examples. Curation compute is 176, 3.3, and 4.3 H100 GPU-days, respectively.">
+        <figcaption><span class="figure-number">Figure 1.</span> Comparison with OpenThoughts-Math. Training on <strong>5k curated examples matches performance with 53× speedup</strong>; 7.5k examples improve accuracy by 2.5% with 41× speedup. Curation compute is reported in H100 GPU-days.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <main>
+    <section class="section abstract-section" id="abstract" aria-labelledby="abstract-title">
+      <div class="container reading">
+        <h2 class="title is-3 has-text-centered" id="abstract-title">Abstract</h2>
+        <div class="paper-text" id="paper-abstract">
+          <p>Reasoning-oriented post-training enables large language models (LLMs) to solve complex tasks via multi-step inference. Supervised fine-tuning (SFT) on high-quality reasoning traces is a particularly efficient approach, but its effectiveness depends critically on careful data curation. Existing pipelines rely on a costly generate-then-filter paradigm: large pools of long reasoning traces are produced by multiple teacher models and subsequently filtered for difficulty and diversity using additional LLMs, often requiring weeks of computation. In this work, we propose <strong>SFTPROBE</strong>, a fundamentally different approach that bypasses this pipeline by directly predicting the quality of reasoning data. We show that <strong>a brief LoRA-based adaptation, combined with evaluating loss on only 5% of each reasoning trace, suffices to estimate both difficulty and diversity.</strong> Our method is grounded in a geometric view of post-training, where pretrained LLMs lie in a low-rank, anisotropic loss basin. By probing this basin via low-rank perturbations, we construct <strong>compact loss signatures whose clustering captures diversity, while loss at curvature inflection points provides a robust proxy for difficulty.</strong> We also provide a simple criterion for teacher selection. Empirically, our approach <strong>reduces data curation time from weeks to hours</strong> while maintaining or improving performance. Remarkably, on mathematical reasoning, <strong>5k generated examples match the highly filtered 89k-example in OpenThoughts-Math dataset, and 7.5k generated examples outperforms it by 2.5% in accuracy.</strong> We further introduce a high-quality physics reasoning dataset.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="method" aria-labelledby="method-title">
+      <div class="container figure-width">
+        <h2 class="title is-3 has-text-centered" id="method-title">Efficient SFT Data Curation</h2>
+        <article class="method-block" aria-labelledby="diversity-title">
+          <div class="container reading">
+            <h3 class="subsection-title" id="diversity-title">Predicting Similarity of Reasoning Traces</h3>
+            <div class="paper-text">
+              <p>During training, each example updates the model parameters through its gradient. Examples with similar gradients induce similar parameter updates and therefore provide largely redundant training signals.</p>
+              <p>Our key observation is that fine-tuning occurs within a low-rank, relatively flat, and smooth region of the loss landscape, where the loss around the pretrained initialization is well approximated by a near-parabolic geometry. Specifically, we show that loss difference at the pretrained parameters and boundaries of the parabolic basin—corresponding to inflection points where the curvature changes—induces the tightest bound on gradient similarity throughout fine-tuning:</p>
+            </div>
+            <details class="theorem">
+              <summary>
+                <span class="theorem-label">Theorem 3.1</span>
+                <span class="theorem-idea">If two examples have similar loss at the extremities of the basin, then their optimization dynamics remain similar across the entire training process.</span>
+                <span class="theorem-prompt">Formal statement <span class="theorem-toggle" aria-hidden="true"></span></span>
+              </summary>
+              <div class="theorem-statement">
+              <h4 id="theorem-title">Theorem 3.1</h4>
+              <p>Assume a smooth fine-tuning loss with bounded curvature \(0 \leq c \leq c_H\). Starting from initialization \(\theta_0\), for any checkpoint \(\theta \in \Theta\) during training define \(\epsilon_\theta = \|\theta-\theta_0\|_2\). Assume that fine-tuning gradients are predominantly captured by an \(r\)-dimensional subspace \(V \subset \mathbb{R}^d\) with orthonormal basis \(\{v_1,\ldots,v_r\}\), such that for every training example \(z\), \(\|\operatorname{Proj}_{V^\perp}\nabla L_z(\theta)\| \leq \gamma\). For each basis direction \(v_i\), denote \(c_{H,i} \triangleq c_{H,v_i}\), and let</p>
+              <div class="equation">\[
+                \theta_{i,1}=\theta_0+\epsilon_{i,1}v_i,\qquad
+                \theta_{i,2}=\theta_0+\epsilon_{i,2}v_i,\qquad
+                0\leq\epsilon_{i,1}<\epsilon_{i,2}.
+              \]</div>
+              <p>If any pair of training examples \(z_1,z_2\) have bounded loss difference at all checkpoints \(\theta_{i,1},\theta_{i,2}\):</p>
+              <div class="equation">\[
+                |L_{z_1}(\theta_{i,1})-L_{z_2}(\theta_{i,1})|\leq\delta,\qquad
+                |L_{z_1}(\theta_{i,2})-L_{z_2}(\theta_{i,2})|\leq\delta,
+                \quad \forall i\in\{1,\ldots,r\},
+              \]</div>
+              <p>then for any \(\theta\in\Theta\) during training, the (full-rank) gradient difference is bounded by</p>
+              <div class="equation bound">\[
+                \|\nabla L_{z_1}(\theta)-\nabla L_{z_2}(\theta)\|
+                \leq \sqrt{\sum_{i=1}^{r}\left(
+                \frac{2\delta}{\epsilon_{i,2}-\epsilon_{i,1}}
+                +\frac{1}{2}(\epsilon_{i,1}+\epsilon_{i,2})c_{H,i}
+                +2\epsilon_\theta\sqrt{c_Hc_{H,i}}
+                \right)^2}+2\gamma.
+              \]</div>
+              </div>
+            </details>
+            <div class="paper-text">
+              <p>To probe the basin, we briefly train a LoRA adapter on a very small subset of reasoning traces to identify its dominant directions. However, the loss landscape is anisotropic: curvature varies substantially across directions, implying that the extent of the near-parabolic region differs from one direction to another.</p>
+            </div>
+            <figure class="paper-figure" style="margin-top: 24px; margin-bottom: 24px;">
+              <img src="static/images/figure-2-anisotropy.svg" width="258" height="129" loading="lazy" alt="Figure 2(b–c). LoRA directions have different curvatures. Directions with lower curvature should be perturbed more to reach the inflection point.">
+              <figcaption><span class="figure-number">Figure 2(b–c).</span> LoRA directions have different curvatures. Directions with lower curvature should be perturbed more to reach the inflection point.</figcaption>
+            </figure>
+            <div class="paper-text">
+              <p>We perturb the model incrementally along each direction and fit a curve to the resulting loss profile to identify the inflection point where curvature changes sign (Algorithm 1). This gives a boundary checkpoint for each direction.</p>
+            </div>
+          </div>
+          <figure class="interactive algorithm-search">
+            <iframe src="inflection-search/index.html" title="Interactive replay of Algorithm 1: inflection-point search" loading="lazy" data-auto-height></iframe>
+          </figure>
+          <div class="container reading">
+            <div class="paper-text">
+              <p>We evaluate the loss of only the initial 1k reasoning tokens at these perturbed checkpoints to construct a compact loss signature for each example. We then cluster these signatures and select an equal number of examples from each cluster to obtain a diverse subset.</p>
+            </div>
+          </div>
+        </article>
+        <article class="method-block" aria-labelledby="difficulty-title">
+          <div class="container reading">
+            <h3 class="subsection-title" id="difficulty-title">Predicting Reliable Difficulty Scores</h3>
+            <div class="paper-text">
+              <p>When generating reasoning traces, the teacher model starts its reasoning by summarizing and rephrasing the problem. The loss of the initial 100 tokens provides a high-quality signal for problem difficulty.</p>
+              <p>Harder problems have higher curvature in this loss. While loss at the pretrained model does not correlate well with difficulty, perturbing toward the inflection point separates the difficulty levels. We therefore evaluate this loss at an inflection checkpoint along a random direction to obtain a difficulty score, without training on full reasoning traces.</p>
+            </div>
+          </div>
+          <figure class="interactive">
+            <iframe src="difficulty-morph/index.html" title="Interactive walkthrough from the loss basin to difficulty separation and correlation" loading="lazy" data-auto-height></iframe>
+          </figure>
+          <div class="container reading paper-text">
+            <p>We discard the easier cluster of problems within each source and sample more examples from sources with higher average difficulty. We then generate full reasoning traces for the selected examples.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class="section teacher-section" id="teacher-selection" aria-labelledby="teacher-title">
+      <div class="container figure-width">
+        <div class="container reading">
+          <h2 class="title is-3 has-text-centered" id="teacher-title">Teacher Selection</h2>
+          <div class="paper-text">
+            <p>We aim to select the teacher whose language is most familiar to the student, allowing the student to focus on solving the problem rather than parsing unfamiliar phrasing. To this end, we randomly sample a set of questions and prompt each candidate teacher model to rephrase the same problems. We cap each response at 100 tokens, as in difficulty filtering, and evaluate the rephrasings using the pretrained student parameters rather than the perturbed ones. As shown in Figure 4, the teachers with the lowest average loss can best train the student model.</p>
+          </div>
+        </div>
+        <figure class="paper-figure teacher-figure">
+        <img src="static/images/figure-4-teacher-selection.svg" width="352" height="125" loading="lazy"
+            alt="Figure 4. We evaluate the loss of the student model and the accuracy of the finetuned on the dataset generated from the teacher model on the NuminaMath dataset.">
+        <figcaption><span class="figure-number">Figure 4.</span> We also train the student using the same randomly selected 1000 questions with responses generated from the teacher model. We find that the higher the rephrasing loss is, the worse the final finetuned student performs.</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="section results-section" id="results" aria-labelledby="results-title">
+      <div class="container figure-width">
+        <h2 class="title is-3 has-text-centered" id="results-title">Main Results</h2>
+        <article class="result-block" aria-labelledby="medical-selection-title">
+          <h3 class="subsection-title" id="medical-selection-title">Data Selection for Medical Reasoning</h3>
+          <figure class="paper-figure medical-selection">
+        <img src="static/images/figure-5-medical-selection.svg" width="339" height="118" loading="lazy"
+              alt="Figure 5. Medical reasoning accuracy versus selection time for Qwen2.5-7B-Instruct and Llama3.1-8B-Instruct, comparing SFTPROBE with selection baselines.">
+        <figcaption><span class="figure-number">Figure 5.</span> Selecting 1k examples from the pre-generated M23k dataset. Our method is comparable to the best selection baseline on Qwen2.5-7B and outperforms selection baselines on Llama3.1-8B, while being substantially faster. Wall time on 4×H100 is reported.</figcaption>
+          </figure>
+        </article>
+        <article class="result-block" aria-labelledby="medical-curation-title">
+          <h3 class="subsection-title" id="medical-curation-title">Data Curation for Medical Reasoning</h3>
+          <figure class="paper-figure medical-curation">
+        <img src="static/images/figure-6-medical-curation.svg" width="196" height="105" loading="lazy"
+              alt="Figure 6. Medical reasoning accuracy versus curation time. SFTPROBE with 1k generated examples closes 76 percent of the gap between random sampling and full 23k-example training at 7 percent of the compute cost.">
+        <figcaption><span class="figure-number">Figure 6.</span> Compared with full 23k-example fine-tuning, our curated 1k examples close <strong>76% of the gap</strong> between random sampling and full-dataset training, while requiring <strong>7% of the compute cost</strong>. Wall time on 4×H100 is reported.</figcaption>
+          </figure>
+        </article>
+        <article class="result-block" aria-labelledby="math-curation-title">
+          <h3 class="subsection-title" id="math-curation-title">Data Curation for Mathematical Reasoning</h3>
+          <figure class="paper-figure math-curation">
+        <img src="static/images/figure-7-math-curation.svg" width="197" height="104" loading="lazy"
+              alt="Figure 7. Math reasoning accuracy versus curation time for 1k, 5k, and 7.5k SFTPROBE examples and selection baselines using OpenThoughts-Math.">
+        <figcaption><span class="figure-number">Figure 7.</span> Data selection baselines select 1k examples from pre-generated OpenThoughts-Math traces. Our method generates data with QwQ-32B and takes less time even when generation time is included. Wall time on 4×H100 is reported.</figcaption>
+          </figure>
+        </article>
+        <article class="result-block" aria-labelledby="physics-curation-title">
+          <h3 class="subsection-title" id="physics-curation-title">Data Curation for Physics Reasoning</h3>
+          <div class="table-wrapper">
+            <table class="physics-table">
+              <caption><span class="figure-number">Table 1.</span> Experiment results on data curation for physics reasoning with Qwen2.5-7B-Instruct as the student model. We outperform PRIME-RL/P1-30B-A3B, a model capable of winning the silver medal for IPhO 2025, although we start with a much weaker base model.</caption>
+              <thead><tr><th scope="col">Model</th><th scope="col">Average score</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Qwen2.5-7B-Instruct</th><td>3.58</td></tr>
+                <tr><th scope="row">Google/Gemma-4-26B-A4B-it</th><td>9.65</td></tr>
+                <tr><th scope="row">PRIME-RL/P1-30B-A3B</th><td>9.05</td></tr>
+                <tr class="ours ours-start"><th scope="row">Ours (1k data generated)</th><td>9.14 ± 0.29</td></tr>
+                <tr class="ours"><th scope="row">Ours (2k data generated)</th><td>9.32 ± 0.11</td></tr>
+                <tr class="ours best"><th scope="row">Ours (5k data generated)</th><td>9.76 ± 0.74</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class="section citation-section" id="citation" aria-labelledby="citation-title">
+      <div class="container reading">
+        <div class="bibtex-header">
+          <h2 class="title is-3" id="citation-title">BibTeX</h2>
+          <button id="copy-bibtex" class="copy-bibtex-btn" type="button">Copy</button>
+        </div>
+        <pre><code id="bibtex">@inproceedings{anonymous2026from,
+  title={From Weeks to Hours: Fast and Principled {SFT} Curation for {LLM}},
+  author={Anonymous},
+  booktitle={The Fortieth Annual Conference on Neural Information Processing Systems},
+  year={2026},
+  url={https://openreview.net/forum?id=4jOHUJJVCg}
+}</code></pre>
+        <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container reading">
+      <p>Website adapted from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a> and the <a href="https://bigml-cs-ucla.github.io/TEMP-project-page/">TEMP project page</a>.</p>
+      <p>Template adaptations are available under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>
